@@ -1,5 +1,5 @@
 'use strict';
-/* Задание на урок:
+/* Задание на урок #1:
 
 1) Создать переменную numberOfFilms и в неё поместить ответ от пользователя на вопрос:
 'Сколько фильмов вы уже посмотрели?'*/
@@ -32,13 +32,49 @@ const personalMovieDB = {
 
 Проверить, чтобы все работало без ошибок в консоли */
 
-const lastFilm1 = prompt('Один из последних просмотренных фильмов?', '');
-const markLastFilm1 = +prompt('На сколько оцените его?', '10');
+// const lastFilm1 = prompt('Один из последних просмотренных фильмов?', '');
+// const markLastFilm1 = +prompt('На сколько оцените его?', '10');
+//
+// const lastFilm2 = prompt('Один из последних просмотренных фильмов?', '');
+// const markLastFilm2 = +prompt('На сколько оцените его?', '10');
+//
+// personalMovieDB.movies[lastFilm1] = markLastFilm1;
+// personalMovieDB.movies[lastFilm2] = markLastFilm2;
+//
+// console.log(personalMovieDB);
 
-const lastFilm2 = prompt('Один из последних просмотренных фильмов?', '');
-const markLastFilm2 = +prompt('На сколько оцените его?', '10');
+/**Код из первого задания больше не актуален, т.к. переписан в задаче 2 к уроку 2**/
 
-personalMovieDB.movies[lastFilm1] = markLastFilm1;
-personalMovieDB.movies[lastFilm2] = markLastFilm2;
+/* Задание на урок #2:
 
-console.log(personalMovieDB);
+1) Автоматизировать вопросы пользователю про фильмы при помощи цикла
+
+2) Сделать так, чтобы пользователь не мог оставить ответ в виде пустой строки,
+отменить ответ или ввести название фильма длинее, чем 50 символов. Если это происходит -
+возвращаем пользователя к вопросам опять. (К любой строке можно обратиться как
+str.length - и получить её длину) */
+
+for (let i = 0; i < 2; i++) {
+    const lastFilm = prompt('Один из последних просмотренных фильмов?', '');
+    const markLastFilm = +prompt('На сколько оцените его?', '10');
+    if ((lastFilm && markLastFilm) && (lastFilm.length < 50)) {
+            personalMovieDB.movies[lastFilm] = markLastFilm;
+            console.log(personalMovieDB);
+    } else {
+        i--;
+    }
+}
+
+/*3) При помощи условий проверить  personalMovieDB.count, и если он меньше 10 - вывести сообщение
+"Просмотрено довольно мало фильмов", если от 10 до 30 - "Вы классический зритель", а если больше -
+"Вы киноман". А если не подошло ни к одному варианту - "Произошла ошибка" */
+
+if (personalMovieDB.count < 10) {
+    alert("Просмотрено довольно мало фильмов");
+} else if (personalMovieDB >= 10 && personalMovieDB < 30) {
+    alert("Вы классический зритель");
+} else if (personalMovieDB >= 30) {
+    alert("Вы киноман");
+} else {
+    alert("Произошла ошибка");
+}
