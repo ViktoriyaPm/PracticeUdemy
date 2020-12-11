@@ -1,55 +1,36 @@
 'use strict';
 
-    let numberOfFilms;
+/* Задание на урок #4:
 
-    function start () {
-        numberOfFilms = +prompt('Сколько фильмов вы уже посмотрели?', '');
+1) Представьте, что перед вами стоит задача переписать код так, чтобы все функции стали методами объекта
+personalMovieDB Такое случается в реальных продуктах при смене технологий или подхода к архитектуре программы */
 
-        while (numberOfFilms == "" || numberOfFilms == null || isNaN(numberOfFilms)) {
-            numberOfFilms = +prompt('Сколько фильмов вы уже посмотрели?', '')
+
+const personalMovieDB = {
+    count: 0,
+    movies: { },
+    actors: { },
+    genres: [ ],
+    privat: false,
+    start: function () {
+        personalMovieDB.count = +prompt('Сколько фильмов вы уже посмотрели?', '');
+
+        while (personalMovieDB.count == "" || personalMovieDB.count == null || isNaN(personalMovieDB.count)) {
+            personalMovieDB.count = +prompt('Сколько фильмов вы уже посмотрели?', '')
         }
 
-        if (numberOfFilms < 10) {
+        if (personalMovieDB.count < 10) {
             alert("Просмотрено довольно мало фильмов");
-        } else if (numberOfFilms >= 10 && numberOfFilms < 30) {
+        } else if (personalMovieDB.count >= 10 && personalMovieDB.count < 30) {
             alert("Вы классический зритель");
-        } else if (numberOfFilms >= 30) {
+        } else if (personalMovieDB.count >= 30) {
             alert("Вы киноман");
         } else {
             alert("Произошла ошибка");
         }
-        return numberOfFilms;
-    }
-
-    start();
-
-    /*) Создать объект personalMovieDB и в него поместить такие свойства:
-        - count - сюда передается ответ на первый вопрос
-        - movies - в это свойство поместить пустой объект
-        - actors - тоже поместить пустой объект
-        - genres - сюда поместить пустой массив
-        - privat - в это свойство поместить boolean(логическое) значение false */
-
-    const personalMovieDB = {
-        count: numberOfFilms,
-        movies: { },
-        actors: { },
-        genres: [ ],
-        privat: false
-    }
-
-    /*) Задайте пользователю по два раза вопросы:
-        - 'Один из последних просмотренных фильмов?'
-        - 'На сколько оцените его?'
-    Ответы стоит поместить в отдельные переменные
-    Записать ответы в объект movies в формате:
-        movies: {
-            'logan': '8.1'
-        } */
-
-
-
-    function rememberMyFilms () {
+        return personalMovieDB.count;
+    },
+    rememberMyFilms: function () {
         for (let i = 0; i < 2; i++) {
             const lastFilm = prompt('Один из последних просмотренных фильмов?', '');
             const markLastFilm = +prompt('На сколько оцените его?', '10');
@@ -60,34 +41,44 @@
                 i--;
             }
         }
-    }
-
-    rememberMyFilms();
-
-    /* Задание на урок #3:
-
-    1) Создать функцию showMyDB, которая будет проверять свойство privat. Если стоит в позиции
-    false - выводит в консоль главный объект программы */
-
-    function showMyDB () {
+    },
+    showMyDB: function () {
         if (personalMovieDB.privat == false) {
             console.log(personalMovieDB)
         }
-    }
-
-
-    /*2) Создать функцию writeYourGenres в которой пользователь будет 3 раза отвечать на вопрос
-    "Ваш любимый жанр под номером ${номер по порядку}". Каждый ответ записывается в массив данных
-    genres
-
-    P.S. Функции вызывать не обязательно*/
-
-    function writeYourGenres () {
+    },
+    toggleVisibleMyDB: function () {
+        if (personalMovieDB.privat) {
+            personalMovieDB.privat = false;
+        } else {
+            personalMovieDB.privat = true;
+        }
+    },
+    writeYourGenres: function () {
         for (let i = 1; i <= 3; i++) {
             const favoriteGenre = prompt(`Ваш любимый жанр под номером ${i}`, '')
-            personalMovieDB.genres.push(favoriteGenre);
-            console.log(personalMovieDB)
+            if (favoriteGenre === null || favoriteGenre === "") {
+                i--;
+            } else {
+                personalMovieDB.genres[i - 1] = favoriteGenre;
+            }
         }
+        personalMovieDB.genres.forEach(function (item, i) {
+                console.log(`Любимый жанр номер ${i + 1} - это ${personalMovieDB.genres[i]}`)
+        })
     }
+}
 
-    writeYourGenres();
+console.log(personalMovieDB.writeYourGenres());
+console.log(personalMovieDB.genres)
+
+    /*2) Создать метод toggleVisibleMyDB, который при вызове будет проверять свойство privat. Если оно false - он
+    переключает его в true, если true - переключает в false. Протестировать вместе с showMyDB. */
+
+    /*3) В методе writeYourGenres запретить пользователю нажать кнопку "отмена" или оставлять пустую строку.
+    Если он это сделал - возвращать его к этому же вопросу. После того, как все жанры введены -
+    при помощи метода forEach вывести в консоль сообщения в таком виде:
+    "Любимый жанр #(номер по порядку, начиная с 1) - это (название из массива)"*/
+
+
+
