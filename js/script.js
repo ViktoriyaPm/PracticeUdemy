@@ -1,50 +1,93 @@
-/* Задания на урок #5: */
+/* Задания на урок #6:
 
+1) Реализовать функционал, что после заполнения формы и нажатия кнопки "Подтвердить" -
+новый фильм добавляется в список. Страница не должна перезагружаться.
+Новый фильм должен добавляться в movieDB.movies.
+Для получения доступа к значению input - обращаемся к нему как input.value;
+P.S. Здесь есть несколько вариантов решения задачи, принимается любой, но рабочий.
+
+2) Если название фильма больше, чем 21 символ - обрезать его и добавить три точки
+
+3) При клике на мусорную корзину - элемент будет удаляться из списка (сложно)
+
+4) Если в форме стоит галочка "Сделать любимым" - в консоль вывести сообщение:
+    "Добавляем любимый фильм"
+
+5) Фильмы должны быть отсортированы по алфавиту */
 
 'use strict';
 
-const movieDB = {
-    movies: [
-        "Логан",
-        "Лига справедливости",
-        "Ла-ла лэнд",
-        "Одержимость",
-        "Скотт Пилигрим против..."
-    ]
-};
+    document.addEventListener('DOMContentLoaded', () => {
 
+        const movieDB = {
+            movies: [
+                "Логан",
+                "Лига справедливости",
+                "Ла-ла лэнд",
+                "Одержимость",
+                "Скотт Пилигрим против..."
+            ]
+        };
 
-/*1) Удалить все рекламные блоки со страницы (правая часть сайта) */
+        const advertisement = document.querySelectorAll('.promo__adv img');
+        const watchedMoves = document.querySelector('.promo__interactive-list');
+        const addForm = document.querySelector('form.add')
+        const addInput = document.querySelector('.adding__input');
+        const checkbox = document.querySelector("[type = 'checkbox']");
 
-    const advertisement = document.querySelectorAll('.promo__adv img');
+        const advertisementCleaner = (arr) => {
+            arr.forEach( item => {
+                item.remove();
+            });
+        };
 
-    advertisement.forEach( item => { item.remove() });
+        const sortArr = (arr) => {
+            arr.sort();
+        }
 
-/*2) Изменить жанр фильма, поменять "комедия" на "драма" */
+        const newMovieList = function (films, parent) {
+            parent.innerHTML = "";
 
-    const genre = document.querySelector('.promo__genre');
+            films.forEach(function (film, index) {
+                parent.innerHTML += `
+            <li class="promo__interactive-item">${index + 1}  ${film}
+                                <div class="delete"></div>
+                            </li>
+             `
+            })
+        }
 
-    genre.textContent = 'драма';
+        advertisementCleaner(advertisement);
+        sortArr(movieDB.movies);
+        newMovieList(movieDB.movies, watchedMoves);
 
-/* 3) Изменить задний фон постера с фильмом на изображение "bg.jpg". Оно лежит в папке img.
- Реализовать только при помощи JS */
+        addForm.addEventListener('submit', (event) => {
+            event.preventDefault();
 
-    const backGround = document.querySelector('.promo__bg');
-    backGround.style.backgroundImage = "url('img/bg.jpg')";
+            let newFilm = addInput.value;
 
-/* 4) Список фильмов на странице сформировать на основании данных const movieDB.
- Отсортировать фильмы по алфавиту
- 5) Добавить нумерацию выведенных фильмов */
+            if (newFilm.length > 21) {
+                newFilm = newFilm.slice(0, 21) + '...'
+            }
 
-    const watchedMoves = document.querySelector('.promo__interactive-list');
-    watchedMoves.innerHTML = "";
+            movieDB.movies.push(newFilm);
 
-    movieDB.movies.sort();
+            sortArr(movieDB.movies);
+            newMovieList(movieDB.movies, watchedMoves);
 
-    movieDB.movies.forEach(function (film, index) {
-        watchedMoves.innerHTML += `
-        <li class="promo__interactive-item"> ${index + 1}  ${film}
-                            <div class="delete"></div>
-                        </li>
-         `
-    })
+            const favourite = checkbox.checked;
+            if (favourite === true) {
+                console.log("Добавляем любимый фильм")
+            }
+        })
+
+        watchedMoves.addEventListener('click', (event) => {
+            if (event.target.className == 'delete') {
+                let indexOfDeletingElem = event.target.parentElement.textContent[0] - 1;
+                movieDB.movies.splice(indexOfDeletingElem, 1);
+                newMovieList(movieDB.movies, watchedMoves);
+            }
+        })
+
+    } )
+
